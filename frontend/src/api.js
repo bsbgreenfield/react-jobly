@@ -52,8 +52,6 @@ class JoblyApi {
   }
 
   static async getUser(username){
-    console.log("this is the token!!!",JoblyApi.token)
-    console.log("************************",username)
     let res  = await this.request(`users/${username}`)
     return res
   }
@@ -68,17 +66,13 @@ class JoblyApi {
     return res.token
   }
 
-  static async logoutUser(user){
-    
-  }
 
   static async updateUser(username, data){
     let res = await this.request(`users/${username}`, data, "PATCH")
-    return res.user
+    return res
   }
 
   static async apply(username, jobId){
-    console.log(jobId)
     let res = await this.request(`users/${username}/jobs/${jobId}`, {}, "POST")
     return res
   }

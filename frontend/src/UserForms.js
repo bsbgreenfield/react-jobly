@@ -136,17 +136,14 @@ function LoginForm() {
 
 
 function UserUpdateForm({ userdata }) {
-
-    const { updateUser } = useContext(userContext)
-
-    const navigate = useNavigate()
     const initialState = {
         username: userdata.username,
-        password: "",
         firstName: userdata.firstName,
         lastName: userdata.lastName,
         email: userdata.email
     }
+    const { updateUser } = useContext(userContext)
+    const navigate = useNavigate()
     const [formData, setFormData] = useState(initialState)
 
     const handleChange = (e) => {
@@ -154,7 +151,7 @@ function UserUpdateForm({ userdata }) {
         setFormData({ ...formData, [name]: value })
     }
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault()
         updateUser(userdata.username, {
             firstName: formData.firstName,
@@ -166,21 +163,15 @@ function UserUpdateForm({ userdata }) {
 
     return (
         <Form onSubmit={handleSubmit} style={{width: '50%', marginLeft: '10px'}}>
-            <Label htmlFor="username">Username: </Label>
+            <Label htmlFor="username" >Username: </Label>
             <Input
                 type="text"
                 name="username"
                 id="username"
                 value={formData.username}
                 onChange={handleChange}
-                readOnly />
-            <Label htmlFor="password">Password: </Label>
-            <Input
-                type="password"
-                name="password"
-                id="password"
-                onChange={handleChange}
-                value={formData.password} />
+                readOnly
+                style={{backgroundColor: "#efefef"}} />
             <Label htmlFor="firstName">First Name: </Label>
             <Input
                 type="text"

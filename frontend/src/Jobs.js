@@ -6,7 +6,6 @@ import userContext from "./UserContext";
 
 function Jobs({jobs, filterJobs}){
    const {currUser} = useContext(userContext)
-
 if (currUser){
    return(
       <div>

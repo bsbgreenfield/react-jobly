@@ -27,7 +27,10 @@ const logoutUser =  () => {
 }
 
 const updateUser = async (username, data) => {
- await JoblyApi.updateUser(username, data)
+ let updatedUser = await JoblyApi.updateUser(username, data)
+ let newCurrUser = {...updatedUser, applications: currUser.applications}
+ setCurrUser(newCurrUser)
+
 }
 
 const apply = async (username, jobId) => {
