@@ -1,8 +1,10 @@
 import React from "react";
+import { SignupForm } from "./UserForms";
 
 function Signup(){
  return(
-    <div>Signup</div>
+    <SignupForm/>
+
  )
 }
 

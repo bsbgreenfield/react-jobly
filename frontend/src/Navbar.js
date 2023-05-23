@@ -5,10 +5,11 @@ function Navbar(){
     return(
         <nav>
             <Link to= {"/Homepage"}>Jobly</Link>
-            <Link to= {"/Companies"}>Companies</Link>
-            <Link to= {"/Jobs"}>Jobs</Link>
+            <Link to= {"/companies"}>Companies</Link>
+            <Link to= {"/jobs"}>Jobs</Link>
             <Link to= {"/Signup"}>Signup</Link>
             <Link to= {"/Login"}>Login</Link>
+            <Link to={"/profile"}>Profile</Link>
         </nav>
     )
 }

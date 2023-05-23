@@ -14,7 +14,6 @@ const userUpdateSchema = require("../schemas/userUpdate.json");
 
 const router = express.Router();
 
-
 /** POST / { user }  => { user, token }
  *
  * Adds a new user. This is not the registration endpoint --- instead, this is
