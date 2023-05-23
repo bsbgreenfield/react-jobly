@@ -68,6 +68,10 @@ class JoblyApi {
     return res.token
   }
 
+  static async logoutUser(user){
+    
+  }
+
   static async updateUser(username, data){
     let res = await this.request(`users/${username}`, data, "PATCH")
     return res.user

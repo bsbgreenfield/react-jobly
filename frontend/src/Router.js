@@ -8,6 +8,7 @@ import Signup from "./Signup";
 import Homepage from "./Homepage";
 import JoblyApi from "./api";
 import CompanyDetail from "./CompanyDetail";
+import Logout from "./Logout";
 
 function Router() {
     const [companies, setCompanies] = useState([])
@@ -46,6 +47,7 @@ function Router() {
             <Route path="/companies/:company" element={<CompanyDetail />} />
             <Route path="/jobs" element={<Jobs jobs ={jobs} filterJobs={filterJobs}/>} />
             <Route path="/login" element={<Login />} />
+            <Route path="/logout" element={<Logout />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/*" element={<Homepage />} />

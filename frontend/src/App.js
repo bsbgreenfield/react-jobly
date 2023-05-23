@@ -19,17 +19,19 @@ const registerUser = async (token) => {
 const loginUser = async token => {
   let userToken = await JoblyApi.loginUser(token)
   setToken(userToken)
-  console.log("success", token)
+}
+
+const logoutUser =  () => {
+  setToken('')
+  setCurrUser(null)
 }
 
 const updateUser = async (username, data) => {
-  let user = await JoblyApi.updateUser(username, data)
-  console.log(user)
+ await JoblyApi.updateUser(username, data)
 }
 
 const apply = async (username, jobId) => {
-    let res = await JoblyApi.apply(username, jobId)
-    console.log("applied to job", jobId)
+  await JoblyApi.apply(username, jobId)
 }
 useEffect(() => {
   const setUser = async () => {
@@ -37,7 +39,6 @@ useEffect(() => {
       JoblyApi.token = token
       let user = jwt_decode(token)
       let currUser = await JoblyApi.getUser(user.username)
-      console.log(currUser.user)
       setCurrUser(currUser.user)
     }
   }
@@ -45,7 +46,7 @@ useEffect(() => {
 }, [token])
   return (
     <div className="App">
-      <userContext.Provider value={{currUser, registerUser, loginUser, updateUser, apply}}>
+      <userContext.Provider value={{currUser, registerUser, loginUser, logoutUser, updateUser, apply}}>
         <BrowserRouter>
           <Navbar/>
           <Router/>

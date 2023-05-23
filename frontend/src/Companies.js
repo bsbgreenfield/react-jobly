@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext} from "react";
 import CompanyCard from "./CompanyCard"
 import {v4 as uuid } from 'uuid'
 import SearchForm from "./SearchForm";

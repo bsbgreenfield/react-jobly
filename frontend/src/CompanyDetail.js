@@ -18,7 +18,7 @@ function CompanyDetail(){
         }
         
         getCompanyDetail(params)
-    }, [])
+    }, [params])
 
 
 
@@ -26,7 +26,6 @@ function CompanyDetail(){
         if (currCompany == null){
             return <div>Loading...</div>
         } else if (currCompany != null){
-            console.log(currCompany)
             return(
                 <div className="CompanyDetail">
                     <h3>{currCompany.company.name}</h3>

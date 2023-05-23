@@ -1,16 +1,34 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import userContext from "./UserContext";
+import { Nav, NavItem, NavLink } from 'reactstrap'
 
-function Navbar(){
-    return(
-        <nav>
-            <Link to= {"/Homepage"}>Jobly</Link>
-            <Link to= {"/companies"}>Companies</Link>
-            <Link to= {"/jobs"}>Jobs</Link>
-            <Link to= {"/Signup"}>Signup</Link>
-            <Link to= {"/Login"}>Login</Link>
-            <Link to={"/profile"}>Profile</Link>
-        </nav>
+function Navbar() {
+    const { currUser } = useContext(userContext)
+  
+    return (
+        <Nav pills>
+            <NavItem>
+                <NavLink tag={Link} to={"/Homepage"}>Jobly</NavLink>
+            </NavItem>
+            <NavItem>
+                <NavLink tag= {Link} to={"/companies"}>Companies</NavLink>
+            </NavItem>
+            <NavItem>
+                <NavLink tag= {Link} to={"/jobs"}>Jobs</NavLink>
+            </NavItem>
+            <NavItem>
+                <NavLink tag= {Link} to={"/Signup"}>Signup</NavLink>
+            </NavItem>
+            <NavItem>
+                {currUser ? <NavLink tag= {Link} to={"/logout"}>logout</NavLink> :
+                    <NavLink tag= {Link} to={"/Login"}>Login</NavLink>}
+            </NavItem>
+            <NavItem>
+                <NavLink tag= {Link} to={"/profile"}>Profile</NavLink>
+            </NavItem>
+
+        </Nav>
     )
 }
 

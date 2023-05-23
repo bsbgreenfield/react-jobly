@@ -12,7 +12,7 @@ function  CompanyCard({company}) {
         <div className="Card-wrapper" onClick={seeDetails}>
             <h4>{company.handle}</h4>
             <p>{company.description}</p>
-            <img src={company.logoUrl}/>
+            <img src={company.logoUrl} alt="company-logo"/>
             <h6>{company.name}</h6>
         </div>
     )

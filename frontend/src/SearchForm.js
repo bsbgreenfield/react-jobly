@@ -1,6 +1,7 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
+import { Form, Row, Col, Button } from "reactstrap";
 
-function SearchForm({filter}){
+function SearchForm({ filter }) {
     const [formData, setFormData] = useState("")
 
     const handleSubmit = (e) => {
@@ -13,12 +14,16 @@ function SearchForm({filter}){
         setFormData(e.target.value)
     }
 
-    return(
-        <form onSubmit={handleSubmit}>
-            <label htmlFor="filter">Keyword: </label>
-            <input type="text" name="filter" id="filter" value={formData} onChange={handleChange}/>
-            <button type="submit">Submit</button>
-        </form>
+    return (
+        <Form onSubmit={handleSubmit}>
+            <Row className="row-cols-lg-auto g-3 align-items-center">
+                <Col>
+                    <label style={{marginLeft: "5px"}} htmlFor="filter">Keyword: </label>
+                    <input style={{marginLeft: "5px"}} type="text" name="filter" id="filter" value={formData} onChange={handleChange} />
+                    <Button style={{marginLeft: "5px"}} color="primary" type="submit">Submit</Button>
+                </Col>
+            </Row>
+        </Form>
     )
 }
 
