@@ -35,6 +35,7 @@ const updateUser = async (username, data) => {
 
 const apply = async (username, jobId) => {
   await JoblyApi.apply(username, jobId)
+  currUser.applications.push(jobId)
 }
 useEffect(() => {
   const setUser = async () => {

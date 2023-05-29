@@ -6,7 +6,7 @@ function Profile(){
     const {currUser } = useContext(userContext)
   
     if (!currUser){
-        return <div>Loading...</div>
+        return <div>Please Log In</div>
     }
     return(
         <UserUpdateForm userdata = {currUser.user} />
