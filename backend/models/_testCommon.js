@@ -3,28 +3,18 @@ const bcrypt = require("bcrypt");
 const db = require("../db.js");
 const { BCRYPT_WORK_FACTOR } = require("../config");
 
-const testJobIds = [];
-
 async function commonBeforeAll() {
   // noinspection SqlWithoutWhere
   await db.query("DELETE FROM companies");
   // noinspection SqlWithoutWhere
   await db.query("DELETE FROM users");
+  await db.query("DELETE FROM jobs")
 
   await db.query(`
     INSERT INTO companies(handle, name, num_employees, description, logo_url)
     VALUES ('c1', 'C1', 1, 'Desc1', 'http://c1.img'),
            ('c2', 'C2', 2, 'Desc2', 'http://c2.img'),
            ('c3', 'C3', 3, 'Desc3', 'http://c3.img')`);
-
-  const resultsJobs = await db.query(`
-    INSERT INTO jobs (title, salary, equity, company_handle)
-    VALUES ('Job1', 100, '0.1', 'c1'),
-           ('Job2', 200, '0.2', 'c1'),
-           ('Job3', 300, '0', 'c1'),
-           ('Job4', NULL, NULL, 'c1')
-    RETURNING id`);
-  testJobIds.splice(0, 0, ...resultsJobs.rows.map(r => r.id));
 
   await db.query(`
         INSERT INTO users(username,
@@ -41,9 +31,13 @@ async function commonBeforeAll() {
       ]);
 
   await db.query(`
-        INSERT INTO applications(username, job_id)
-        VALUES ('u1', $1)`,
-      [testJobIds[0]]);
+      INSERT INTO jobs (title, salary, equity, company_handle)
+      VALUES  ('tester', 12345, 0.1, 'c1'),
+              ('manager', 999, 0.2, 'c1'),
+              ('janitor', 111, 0.1, 'c2')
+              `)
+ let j1 =  await db.query(`SELECT id FROM jobs WHERE title = 'manager'`)
+  await db.query(`INSERT INTO applications (username, job_id) VALUES ('u1',${j1.rows[0].id} )`)
 }
 
 async function commonBeforeEach() {
@@ -64,5 +58,4 @@ module.exports = {
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
-  testJobIds,
 };

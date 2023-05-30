@@ -1,130 +1,77 @@
-"use strict";
-
-/** Routes for jobs. */
-
 const jsonschema = require("jsonschema");
-
 const express = require("express");
+
 const { BadRequestError } = require("../expressError");
-const { ensureAdmin } = require("../middleware/auth");
-const Job = require("../models/job");
-const jobNewSchema = require("../schemas/jobNew.json");
-const jobUpdateSchema = require("../schemas/jobUpdate.json");
-const jobSearchSchema = require("../schemas/jobSearch.json");
+const { ensureLoggedIn, isLoggedInAdmin } = require("../middleware/auth");
 
-const router = express.Router({ mergeParams: true });
+const jobNewSchema = require('../schemas/jobNew.json')
+const jobUpdateSchema = require('../schemas/jobUpdate.json')
+const Job = require('../models/job');
+const { route } = require("./users");
 
+const router = new express.Router();
 
-/** POST / { job } => { job }
- *
- * job should be { title, salary, equity, companyHandle }
- *
- * Returns { id, title, salary, equity, companyHandle }
- *
- * Authorization required: admin
- */
-
-router.post("/", ensureAdmin, async function (req, res, next) {
-  try {
-    const validator = jsonschema.validate(req.body, jobNewSchema);
-    if (!validator.valid) {
-      const errs = validator.errors.map(e => e.stack);
-      throw new BadRequestError(errs);
+router.post('/', isLoggedInAdmin, async (req, res, next) => {
+    const validator = jsonschema.validate(req.body,jobNewSchema)
+    console.log(validator.valid)
+    try{
+        if (!validator.valid){
+            const errs = validator.errors.map(e => e.stack);
+            throw new BadRequestError(errs);
+        }
+        const newJob = await Job.create(req.body)
+        return res.status(201).json({"job": newJob})
     }
+   catch(err){
+    next(err)
+   }
+})
 
-    const job = await Job.create(req.body);
-    return res.status(201).json({ job });
-  } catch (err) {
-    return next(err);
-  }
-});
-
-/** GET / =>
- *   { jobs: [ { id, title, salary, equity, companyHandle, companyName }, ...] }
- *
- * Can provide search filter in query:
- * - minSalary
- * - hasEquity (true returns only jobs with equity > 0, other values ignored)
- * - title (will find case-insensitive, partial matches)
-
- * Authorization required: none
- */
-
-router.get("/", async function (req, res, next) {
-  const q = req.query;
-  // arrive as strings from querystring, but we want as int/bool
-  if (q.minSalary !== undefined) q.minSalary = +q.minSalary;
-  q.hasEquity = q.hasEquity === "true";
-
-  try {
-    const validator = jsonschema.validate(q, jobSearchSchema);
-    if (!validator.valid) {
-      const errs = validator.errors.map(e => e.stack);
-      throw new BadRequestError(errs);
+router.get('/', async (req, res, next) => {
+    try {
+        const filters = req.query
+        const allJobs = await Job.getAll(filters);
+        if (allJobs.length > 0) return res.json(allJobs)
+        else return res.json({"message":"no jobs found with these parameters"})
     }
-
-    const jobs = await Job.findAll(q);
-    return res.json({ jobs });
-  } catch (err) {
-    return next(err);
-  }
-});
-
-/** GET /[jobId] => { job }
- *
- * Returns { id, title, salary, equity, company }
- *   where company is { handle, name, description, numEmployees, logoUrl }
- *
- * Authorization required: none
- */
-
-router.get("/:id", async function (req, res, next) {
-  try {
-    const job = await Job.get(req.params.id);
-    return res.json({ job });
-  } catch (err) {
-    return next(err);
-  }
-});
-
-
-/** PATCH /[jobId]  { fld1, fld2, ... } => { job }
- *
- * Data can include: { title, salary, equity }
- *
- * Returns { id, title, salary, equity, companyHandle }
- *
- * Authorization required: admin
- */
-
-router.patch("/:id", ensureAdmin, async function (req, res, next) {
-  try {
-    const validator = jsonschema.validate(req.body, jobUpdateSchema);
-    if (!validator.valid) {
-      const errs = validator.errors.map(e => e.stack);
-      throw new BadRequestError(errs);
+    catch(err){
+        next(err)
     }
+})
 
-    const job = await Job.update(req.params.id, req.body);
-    return res.json({ job });
-  } catch (err) {
-    return next(err);
-  }
-});
+router.get('/:id', async (req, res, next) => {
+    try{
+        const job = await Job.get(req.params.id)
+        return res.json(job)
+    }
+    catch(err){
+        next(err)
+    }
+})
 
-/** DELETE /[handle]  =>  { deleted: id }
- *
- * Authorization required: admin
- */
+router.patch('/:id', isLoggedInAdmin, async (req, res, next) => {
+    try{
+        const data = req.body
+        const validator = jsonschema.validate(data,jobUpdateSchema )
+        if (!validator.valid){
+            throw new BadRequestError(`${data} not valid input for update`, 401)
+        }
+        const job = await Job.update(req.params.id, data)
+        return res.json(job)
+    }
+    catch(err){
+        next(err)
+    }
+})
 
-router.delete("/:id", ensureAdmin, async function (req, res, next) {
-  try {
-    await Job.remove(req.params.id);
-    return res.json({ deleted: +req.params.id });
-  } catch (err) {
-    return next(err);
-  }
-});
+router.delete('/:id', isLoggedInAdmin, async (req, res, next) => {
+    try{
+        const job = await Job.remove(req.params.id)
+        return res.json(job)
+    }
+    catch(err){
+        next(err)
+    }
+})
 
-
-module.exports = router;
+module.exports = router
