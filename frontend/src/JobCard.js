@@ -10,12 +10,12 @@ function JobCard({job, currUser}){
         e.target.innerText = "Applied!!"
         apply(currUser.user.username, job.id)
     }
-
+    const [isAppliedTo, setIsAppliedTo] = useState(false)
     useEffect(() => {
         setIsAppliedTo(
             currUser.applications.includes(job.id))
     }, [currUser.applications, job.id])
-    const [isAppliedTo, setIsAppliedTo] = useState(false)
+    
     return(
         <div className="Card-wrapper">
             <h3>Title: {job.title}</h3>

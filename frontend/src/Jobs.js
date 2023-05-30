@@ -6,7 +6,7 @@ import userContext from "./UserContext";
 
 function Jobs({jobs, filterJobs}){
    const {currUser} = useContext(userContext)
-if (currUser){
+if (currUser && jobs.length){
    return(
       <div>
           <SearchForm filter={filterJobs}/>
@@ -17,6 +17,16 @@ if (currUser){
       </div>
    )
 }
+ else if (jobs.message){
+   return(
+      <>
+       <SearchForm filter={filterJobs}/>
+         <div> No Jobs found</div>
+      </>
+     
+   ) 
+}
+
 else{
    return <div>Must be logged in</div>
 }

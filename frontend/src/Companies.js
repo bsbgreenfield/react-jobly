@@ -7,8 +7,8 @@ import userContext from "./UserContext";
 
 function Companies({companies, filterCompanies}){
     const {currUser} = useContext(userContext)
-
-    if (currUser){
+    console.log(companies)
+    if (currUser && companies.length){
         return(
             <div className="CompanyList">
                 <SearchForm filter = {filterCompanies}/>
@@ -22,12 +22,21 @@ function Companies({companies, filterCompanies}){
             </div>
         )
     }
-
+    else if (companies.length === 0){
+        return(
+            <div className="CompanyList">
+                <SearchForm filter = {filterCompanies}/>
+                <div>No Companies Found</div>
+            </div>
+          
+        )
+    }
     else{
         return(
             <div>You must be logged in</div>
         )
     }
+    
     
 }
 
